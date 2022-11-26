@@ -1,13 +1,13 @@
 <br/>
 <h1 align="center">
-  Example Github Action for PNPM and GH Packages
+  PNPM and Github Packages Workflow
 </h1>
 <p align="middle">
-  A lightweight utility for managing conditional classnames in React.
+  An example Github Action using PNPM and Github Packages. 
   </p>
 <br/>
 <p align="center">
-  <a href="https://github.com/tbusillo/teensy-typescript-package/actions/workflows"><img src="https://github.com/tbusillo/teensy-typescript-package/actions/workflows/test.yml/badge.svg" alt="CI status"></a>
+  <a href="https://github.com/tbusillo/pnpm-vite-react-github-action-example/actions/workflows"><img src="https://github.com/tbusillo/pnpm-vite-react-github-action-example/actions/workflows/test.yml/badge.svg" alt="CI status"></a>
 </p>
 <br/>
 
