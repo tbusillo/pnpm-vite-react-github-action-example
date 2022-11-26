@@ -1,0 +1,53 @@
+on:
+  - push
+  - pull_request
+
+jobs:
+  run-tests-and-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - uses: pnpm/action-setup@v2.0.1
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      # ${{ secrets.GH_PACKAGE_TOKEN }} is a personal access token you'll need to generate/use: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+      # You will also need to include the token within the repository's secets (https://github.com/<username>/<repository_name>/settings/secrets/actions)
+      - name: Authenticate with private NPM package
+        run: |
+          npm config set "//npm.pkg.github.com/:_authToken=${{ secrets.GH_PACKAGE_TOKEN }}" 
+          npm config set "@tbusillo:registry" "https://npm.pkg.github.com"
+          npm config set "https://npm.pkg.github.com/:always-auth" "true"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      # This will need to be replaced with whatever your test command is in your package.json
+      - name: Run tests
+        run: pnpm ci:test
+
+      # Replace this with whatever your lint command is in your package.json
+      - name: Run lint
+        run: pnpm lint
